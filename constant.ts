@@ -1,3 +1,4 @@
 export enum ERROR_CODE {
   USER_EXIST,
+  USERNAME_INVALID,
 }
