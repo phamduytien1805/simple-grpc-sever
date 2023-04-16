@@ -1,4 +1,5 @@
-export enum ERROR_CODE {
+export enum CODE {
+  SUCCESS,
   USER_EXIST,
   USERNAME_INVALID,
 }

@@ -8,7 +8,7 @@ import {
 import { ChatServiceHandlers } from "../proto/chatPackage/ChatService";
 
 import { ChatRoom } from "./chat-room.service";
-import { ERROR_CODE } from "../constant";
+import { CODE } from "../constant";
 import { User } from "../proto/chatPackage/User";
 import { JoinResponse } from "../proto/chatPackage/JoinResponse";
 import { ChatMessage } from "../proto/chatPackage/ChatMessage";
@@ -25,24 +25,29 @@ export const ChatServices: ChatServiceHandlers = {
   ) {
     try {
       const newUser = call.request;
+      console.log("newUser", newUser);
       if (!newUser.name) {
         return callback(null, {
-          error: ERROR_CODE.USERNAME_INVALID,
+          subcode: CODE.USERNAME_INVALID,
           message: "Username invalid.",
         });
       }
+      console.log("newUser", newUser);
 
       const chatRoom = ChatRoom.getInstance();
+      console.log("chatRoom", chatRoom);
       const usersInChatRoom = chatRoom.getUsers();
       const isUserExist = usersInChatRoom.find(
         (_user) => _user.name === newUser.name
       );
+      console.log("first");
       if (isUserExist) {
         return callback(null, {
-          error: ERROR_CODE.USER_EXIST,
+          subcode: CODE.USER_EXIST,
           message: "User already exist.",
         });
       }
+      console.log("second");
 
       chatRoom.addUser({ name: newUser.name });
 
@@ -51,11 +56,14 @@ export const ChatServices: ChatServiceHandlers = {
         timestamp: Date.now(),
       };
       const joinEvent = new JoinEvent(joinNotification);
+      console.log("four");
 
       chatRoom.observers.forEach((_observer) => {
         _observer.write(joinEvent);
       });
+      callback(null, { subcode: CODE.SUCCESS, message: "Join success" });
     } catch (error) {
+      console.log("error", error);
       callback(error as Partial<StatusObject>);
     }
   },

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "proto:gen": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto"
+    "proto:gen": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto",
+    "start": "ts-node ./server"
   },
   "author": "",
   "license": "ISC",

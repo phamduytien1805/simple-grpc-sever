@@ -21,7 +21,7 @@ message ChatEvent {
   }
 }
 message JoinResponse {
-  int32 error = 1;
+  int32 subcode = 1;
   string message = 2;
 
 }

@@ -2,11 +2,11 @@
 
 
 export interface JoinResponse {
-  'error'?: (number);
+  'subcode'?: (number);
   'message'?: (string);
 }
 
 export interface JoinResponse__Output {
-  'error'?: (number);
+  'subcode'?: (number);
   'message'?: (string);
 }
