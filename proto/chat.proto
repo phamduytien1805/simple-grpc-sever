@@ -28,9 +28,9 @@ message LikeMessage {
 
 message ChatEvent {
   oneof event {
-    ChatMessage chatMessage = 2;
-    JoinNotification joinNotification = 3;
-    LikeMessage likeMessage = 4;
+    ChatMessage chatMessage = 1;
+    JoinNotification joinNotification = 2;
+    LikeMessage likeMessage = 3;
   }
 }
 
@@ -40,7 +40,7 @@ message ResponseEvent {
 }
 
 message User {
-  string name = 2;
+  string name = 1;
 }
 message Empty {}
 

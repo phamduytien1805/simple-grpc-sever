@@ -4,6 +4,7 @@ import { ChatEvent } from "../proto/chatPackage/ChatEvent";
 import { ChatMessage } from "../proto/chatPackage/ChatMessage";
 import { MessagePayload } from "../proto/chatPackage/MessagePayload";
 import { v4 as uuidv4 } from "uuid";
+import { JoinNotification } from "../proto/chatPackage/JoinNotification";
 
 export class Message implements ChatMessage {
   public readonly uuid: string;
@@ -20,6 +21,18 @@ export class Message implements ChatMessage {
     this.userLike = [];
     this.username = msgPayload.username;
     this.msg = msgPayload.msg;
+  }
+}
+
+export class JoinNoti implements JoinNotification {
+  public readonly uuid: string;
+  public readonly username: string;
+  public readonly timestamp: number | string | Long;
+
+  constructor(userName: string) {
+    this.uuid = uuidv4();
+    this.timestamp = Date.now();
+    this.username = userName;
   }
 }
 export interface UserMessages {

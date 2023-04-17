@@ -6,7 +6,7 @@ import {
 } from "@grpc/grpc-js";
 import { ChatServiceHandlers } from "../proto/chatPackage/ChatService";
 
-import { ChatRoom, Message } from "./chat-room.service";
+import { ChatRoom, Message, JoinNoti } from "./chat-room.service";
 import { CODE } from "../constant";
 import { User } from "../proto/chatPackage/User";
 import { ChatMessage } from "../proto/chatPackage/ChatMessage";
@@ -27,6 +27,7 @@ export const ChatServices: ChatServiceHandlers = {
   ) {
     try {
       const newUser = call.request;
+      console.log("newUser", newUser);
       if (!newUser.name) {
         return callback(null, {
           subcode: CODE.USERNAME_INVALID,
@@ -48,11 +49,9 @@ export const ChatServices: ChatServiceHandlers = {
 
       chatRoom.addUser({ name: newUser.name });
 
-      const joinNotification: JoinNotification = {
-        username: newUser.name,
-        timestamp: Date.now(),
-      };
+      const joinNotification = new JoinNoti(newUser.name);
       const joinEvent = new JoinEvent(joinNotification);
+      console.log("joinEvent", joinEvent);
 
       chatRoom.observers.forEach((_observer) => {
         _observer.write(joinEvent);
@@ -69,6 +68,7 @@ export const ChatServices: ChatServiceHandlers = {
   ) {
     try {
       const messageLike = call.request;
+      console.log("messageLike", messageLike);
       const { message, userSend } = messageLike;
       if (!message?.username || !userSend) {
         return callback(null, {
@@ -129,6 +129,7 @@ export const ChatServices: ChatServiceHandlers = {
     try {
       const chatObj = call.request;
       const chatRoom = ChatRoom.getInstance();
+      console.log("chatObj", chatObj);
 
       if (!chatObj.msg || !chatObj.username) {
         return callback(null, {
@@ -179,6 +180,7 @@ export const ChatServices: ChatServiceHandlers = {
   },
 
   receiveEvent(call: ServerWritableStream<Empty, ChatEvent>) {
+    // console.log("call", call);
     const chatRoom = ChatRoom.getInstance();
     chatRoom.addObserver(call);
   },
@@ -196,6 +198,7 @@ export const ChatServices: ChatServiceHandlers = {
     callback: sendUnaryData<MessageList>
   ) {
     const user = call.request;
+    console.log("user", user);
     const chatRoom = ChatRoom.getInstance();
 
     const usersInChatRoom = chatRoom.getUsers();

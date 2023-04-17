@@ -15,11 +15,9 @@ export class MessageEvent implements ChatEvent {
 }
 
 export class JoinEvent implements ChatEvent {
-  uuid: string;
   joinNotification: JoinNotification;
   event: "joinNotification" = "joinNotification";
   constructor(joinNotification: JoinNotification) {
-    this.uuid = uuidv4();
     this.joinNotification = joinNotification;
   }
 }
