@@ -14,7 +14,10 @@ export interface ProtoGrpcType {
     ChatService: SubtypeConstructor<typeof grpc.Client, _chatPackage_ChatServiceClient> & { service: _chatPackage_ChatServiceDefinition }
     Empty: MessageTypeDefinition
     JoinNotification: MessageTypeDefinition
-    JoinResponse: MessageTypeDefinition
+    LikeMessage: MessageTypeDefinition
+    MessageList: MessageTypeDefinition
+    MessagePayload: MessageTypeDefinition
+    ResponseEvent: MessageTypeDefinition
     User: MessageTypeDefinition
     UserList: MessageTypeDefinition
   }

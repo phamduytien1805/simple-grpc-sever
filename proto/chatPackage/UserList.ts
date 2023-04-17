@@ -7,5 +7,5 @@ export interface UserList {
 }
 
 export interface UserList__Output {
-  'users'?: (_chatPackage_User__Output)[];
+  'users': (_chatPackage_User__Output)[];
 }

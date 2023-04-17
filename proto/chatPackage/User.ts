@@ -6,5 +6,5 @@ export interface User {
 }
 
 export interface User__Output {
-  'name'?: (string);
+  'name': (string);
 }

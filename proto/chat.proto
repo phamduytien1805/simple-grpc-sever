@@ -2,29 +2,43 @@ syntax = "proto3";
 
 package chatPackage;
 
-message ChatMessage {
+message MessagePayload {
   string username = 1;
   string msg = 2;
-  int64 timestamp = 3;
-  int32 like = 4;
+}
+
+message ChatMessage {
+  string uuid = 1; 
+  string username = 2;
+  string msg = 3;
+  int64 timestamp = 4;
+  int32 like = 5;
 }
 
 message JoinNotification {
-string username = 1;
-int64 timestamp = 2;
-
+  string uuid = 1; 
+  string username = 2;
+  int64 timestamp = 3;
 }
+
+message LikeMessage {
+  string userSend = 1;
+  ChatMessage message = 2; 
+}
+
 message ChatEvent {
   oneof event {
-    ChatMessage chatMessage = 1;
-    JoinNotification joinNotification = 2;
+    ChatMessage chatMessage = 2;
+    JoinNotification joinNotification = 3;
+    LikeMessage likeMessage = 4;
   }
 }
-message JoinResponse {
+
+message ResponseEvent {
   int32 subcode = 1;
   string message = 2;
-
 }
+
 message User {
   string name = 2;
 }
@@ -34,12 +48,18 @@ message UserList {
   repeated User users = 1;
 }
 
+message MessageList {
+  repeated ChatMessage msg = 1;
+}
+
 service ChatService {
+  rpc joinRequest(User) returns (ResponseEvent) {}
 
-  rpc joinRequest(User) returns (JoinResponse) {}
-
-  rpc sendMsg(ChatMessage) returns (Empty) {}
+  rpc likeMessage(LikeMessage) returns (ResponseEvent) {}
+  rpc sendMsg(MessagePayload) returns (ResponseEvent) {}
   rpc receiveEvent(Empty) returns (stream ChatEvent) {}
 
   rpc getAllUsers(Empty) returns (UserList) {}
+  rpc getAllMessages(User) returns (MessageList) {}
+
 }
