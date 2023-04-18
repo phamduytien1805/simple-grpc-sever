@@ -8,5 +8,5 @@ The goal of this project is to understand how GRPC protocol works.
 ```bash
 # development
 $ npm run start
-#or
-$yarn run start
+or
+$ yarn run start
