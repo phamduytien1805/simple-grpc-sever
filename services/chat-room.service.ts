@@ -39,7 +39,10 @@ export interface UserMessages {
   [username: string]: Message[];
 }
 export class User {
-  constructor(public readonly name: string) {}
+  public readonly timeJoin: number | string | Long;
+  constructor(public readonly name: string) {
+    this.timeJoin = Date.now();
+  }
 }
 
 export class ChatRoom {
@@ -64,17 +67,21 @@ export class ChatRoom {
 
   public addUser(user: User) {
     this.usersMsg[user.name] = [];
+    console.log("this.usersMsg", this.usersMsg);
     this.users.push(user);
   }
 
   public addMsg(msg: Message) {
     if (msg.username) {
-      if (this.usersMsg[msg.username] && !this.usersMsg[msg.username].length) {
+      console.log("msg", msg);
+      console.log("this.usersMsg[msg.username]", this.usersMsg[msg.username]);
+      if (this.usersMsg[msg.username].length) {
         this.usersMsg[msg.username].push(msg);
       } else {
         this.usersMsg[msg.username] = [msg];
       }
     }
+    console.log("this.usersMsg", this.usersMsg);
   }
 
   public addObserver(observer: ServerWritableStream<Empty, ChatEvent>) {

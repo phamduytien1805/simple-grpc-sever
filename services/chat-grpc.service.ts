@@ -6,7 +6,12 @@ import {
 } from "@grpc/grpc-js";
 import { ChatServiceHandlers } from "../proto/chatPackage/ChatService";
 
-import { ChatRoom, Message, JoinNoti } from "./chat-room.service";
+import {
+  ChatRoom,
+  Message,
+  JoinNoti,
+  User as RoomUser,
+} from "./chat-room.service";
 import { CODE } from "../constant";
 import { User } from "../proto/chatPackage/User";
 import { ChatMessage } from "../proto/chatPackage/ChatMessage";
@@ -46,8 +51,9 @@ export const ChatServices: ChatServiceHandlers = {
           message: "User already exist.",
         });
       }
+      const createdUser = new RoomUser(newUser.name);
 
-      chatRoom.addUser({ name: newUser.name });
+      chatRoom.addUser(createdUser);
 
       const joinNotification = new JoinNoti(newUser.name);
       const joinEvent = new JoinEvent(joinNotification);
@@ -129,7 +135,7 @@ export const ChatServices: ChatServiceHandlers = {
     try {
       const chatObj = call.request;
       const chatRoom = ChatRoom.getInstance();
-      console.log("chatObj", chatObj);
+      // console.log("chatObj", chatObj);
 
       if (!chatObj.msg || !chatObj.username) {
         return callback(null, {
@@ -198,11 +204,14 @@ export const ChatServices: ChatServiceHandlers = {
     callback: sendUnaryData<MessageList>
   ) {
     const user = call.request;
-    console.log("user", user);
     const chatRoom = ChatRoom.getInstance();
 
     const usersInChatRoom = chatRoom.getUsers();
-    if (!usersInChatRoom.find((_user) => user.name === _user.name)) {
+
+    const currentUser = usersInChatRoom.find(
+      (_user) => user.name === _user.name
+    );
+    if (!currentUser) {
       return callback(null);
     }
 
@@ -220,6 +229,10 @@ export const ChatServices: ChatServiceHandlers = {
       }
       return 0;
     });
-    callback(null, { msg: allMsg });
+
+    const result = allMsg.filter(
+      (_msg) => _msg.timestamp && _msg.timestamp >= currentUser.timeJoin
+    );
+    callback(null, { msg: result });
   },
 };
